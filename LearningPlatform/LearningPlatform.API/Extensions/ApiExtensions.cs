@@ -1,6 +1,9 @@
-﻿using LearningPlatform.API.Endpoints;
-using LearninPlatform.Infrastructure;
+﻿using AutoMapper.Features;
+using LearningPlatform.API.Endpoints;
+using LearningPlatform.Core.Enums;
+using LearninPlatform.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -41,7 +44,8 @@ public static class ApiExtensions
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions!.SecretKey))
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtOptions!.SecretKey))
                 };
 
                 options.Events = new JwtBearerEvents
@@ -55,6 +59,18 @@ public static class ApiExtensions
                 };
             });
 
+        services.AddScoped<IPermissionService, PermissionService>();
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
         services.AddAuthorization();
+    }
+
+    public static IEndpointConventionBuilder RequirePermissions<TBuilder>(
+        this TBuilder builder, params Permission[] permissions)
+            where TBuilder : IEndpointConventionBuilder
+    {
+        return builder
+            .RequireAuthorization(pb => 
+                pb.AddRequirements(new PermissionRequirement(permissions)));
     }
 }

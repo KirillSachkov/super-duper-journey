@@ -1,15 +1,17 @@
 using LearningPlatform.API.Extensions;
-using LearningPlatform.API.Middlewares;
-using LearningPlatform.Application.Interfaces.Auth;
-using LearningPlatform.Application.Interfaces.Repositories;
-using LearningPlatform.Application.Services;
+using LearningPlatform.API.Infrastructure;
+using LearningPlatform.Application;
 using LearningPlatform.Persistence;
-using LearningPlatform.Persistence.Repositories;
-using LearninPlatform.Infrastructure;
+using LearningPlatform.Persistence.Mappings;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
+
 var services = builder.Services;
 var configuration = builder.Configuration;
 
@@ -19,23 +21,18 @@ services.AddEndpointsApiExplorer();
 
 services.AddSwaggerGen();
 
-services.AddTransient<ExceptionMiddleware>();
-
 services.AddDbContext<LearningDbContext>(options =>
 {
     options.UseNpgsql(configuration.GetConnectionString(nameof(LearningDbContext)));
 });
 
-services.AddScoped<IJwtProvider, JwtProvider>();
-services.AddScoped<IPasswordHasher, PasswordHasher>();
+services
+    .AddPersistence()
+    .AddApplication()
+    .AddInfrastructure();
 
-services.AddScoped<ICourseRepository, CourseRepository>();
-services.AddScoped<ILessonsRepository, LessonsRepository>();
-services.AddScoped<IUsersRepository, UsersRepository>();
-
-services.AddScoped<CoursesService>();
-services.AddScoped<LessonsService>();
-services.AddScoped<UserService>();
+builder.Services.AddProblemDetails();
+services.AddExceptionHandler<GlobalExceptionHandler>();
 
 services.AddAutoMapper(typeof(DataBaseMappings));
 
@@ -47,9 +44,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionMiddleware>();
-
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler();
+
+app.UseSerilogRequestLogging();
 
 app.UseCookiePolicy(new CookiePolicyOptions
 {

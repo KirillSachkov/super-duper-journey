@@ -9,13 +9,13 @@ public class User
         Email = email;
     }
 
-    public Guid Id { get; set; }
+    public Guid Id { get; }
 
-    public string UserName { get; private set; }
+    public string UserName { get; }
 
-	public string PasswordHash { get; private set; }
+	public string PasswordHash { get; }
 
-	public string Email { get; private set; }
+	public string Email { get; }
 
     public static User Create(Guid id, string userName, string passwordHash, string email)
     {

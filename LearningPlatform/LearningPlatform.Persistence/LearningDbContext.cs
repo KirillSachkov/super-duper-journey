@@ -13,9 +13,15 @@ public class LearningDbContext(DbContextOptions<LearningDbContext> options)
 
     public DbSet<UserEntity> Users { get; set; }
 
+    public DbSet<RoleEntity> Roles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CourseConfiguration());
         modelBuilder.ApplyConfiguration(new LessonConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
     }
 }

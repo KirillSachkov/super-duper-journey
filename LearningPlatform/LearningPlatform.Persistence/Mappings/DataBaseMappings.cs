@@ -2,7 +2,7 @@
 using LearningPlatform.Core.Models;
 using LearningPlatform.Persistence.Entities;
 
-namespace LearningPlatform.Persistence;
+namespace LearningPlatform.Persistence.Mappings;
 public class DataBaseMappings : Profile
 {
     public DataBaseMappings()

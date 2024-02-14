@@ -18,12 +18,20 @@ public class UsersRepository : IUsersRepository
 
     public async Task Add(User user)
     {
+        var roleEntity = await _context.Roles
+            .SingleOrDefaultAsync(r => r.Role == Core.Enums.Role.User)
+            ?? throw new InvalidOperationException();
+
         var userEntity = new UserEntity()
         {
             Id = user.Id,
             UserName = user.UserName,
             PasswordHash = user.PasswordHash,
-            Email = user.Email
+            Email = user.Email,
+            Roles = new List<RoleEntity>()
+            {
+                roleEntity
+            }
         };
 
         await _context.Users.AddAsync(userEntity);
@@ -37,5 +45,22 @@ public class UsersRepository : IUsersRepository
             .FirstOrDefaultAsync(u => u.Email == email) ?? throw new Exception();
 
         return _mapper.Map<User>(userEntity);
+    }
+
+    public async Task<HashSet<Core.Enums.Permission>> GetUserPermissions(Guid userId)
+    {
+        var roles = await _context.Users
+            .AsNoTracking()
+            .Include(u => u.Roles)
+            .ThenInclude(r => r.Permissions)
+            .Where(u => u.Id == userId)
+            .Select(u => u.Roles)
+            .ToArrayAsync();
+
+        return roles
+            .SelectMany(r => r)
+            .SelectMany(r => r.Permissions)
+            .Select(p => p.Permission)
+            .ToHashSet();
     }
 }

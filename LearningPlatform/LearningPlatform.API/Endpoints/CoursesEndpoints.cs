@@ -1,7 +1,10 @@
 ﻿using LearningPlatform.API.Contracts.Courses;
+using LearningPlatform.API.Extensions;
 using LearningPlatform.Application.Services;
 using LearningPlatform.Core.Models;
 using Microsoft.AspNetCore.Mvc;
+
+using Permission = LearningPlatform.Core.Enums.Permission;
 
 namespace LearningPlatform.API.Endpoints;
 
@@ -9,23 +12,29 @@ public static class CoursesEndpoints
 {
     public static IEndpointRouteBuilder MapCoursesEndpoints(this IEndpointRouteBuilder app)
     {
-        var endpoints = app.MapGroup("course").RequireAuthorization();
+        var endpoints = app.MapGroup("course");
 
-        endpoints.MapPost(string.Empty, CreateCourse);
+        endpoints.MapPost(string.Empty, CreateCourse)
+            .RequirePermissions(Permission.Create);
 
-        endpoints.MapGet(string.Empty, GetCourses);
+        endpoints.MapGet(string.Empty, GetCourses)
+            .RequirePermissions(Permission.Read);
 
-        endpoints.MapGet("{id:guid}", GetCourseById);
+        endpoints.MapGet("{id:guid}", GetCourseById)
+            .RequirePermissions(Permission.Read);
 
-        endpoints.MapPut("{id:guid}", UpdateCourse);
+        endpoints.MapPut("{id:guid}", UpdateCourse)
+            .RequirePermissions(Permission.Update);
 
-        endpoints.MapDelete("{id:guid}", DeleteCourse);
+        endpoints.MapDelete("{id:guid}", DeleteCourse)
+            .RequirePermissions(Permission.Delete);
 
         return endpoints;
     }
 
     private static async Task<IResult> CreateCourse(
         [FromBody] CreateCourseRequest request,
+        HttpContext context,
         CoursesService coursesService)
     {
         var course = Course.Create(

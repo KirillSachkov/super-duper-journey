@@ -1,6 +1,6 @@
-﻿namespace LearninPlatform.Infrastructure;
+﻿namespace LearninPlatform.Infrastructure.Authentication;
 
-public class JwtOptions 
+public class JwtOptions
 {
     public string Issuer { get; set; } = string.Empty;
 

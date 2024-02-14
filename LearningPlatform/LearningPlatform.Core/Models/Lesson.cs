@@ -2,7 +2,13 @@
 
 public class Lesson
 {
-	private Lesson(Guid id, Guid courseId, string title, string description, string videoLink, string lessonText)
+	private Lesson(
+		Guid id,
+		Guid courseId,
+		string title,
+		string description,
+		string videoLink,
+		string lessonText)
 	{
 		Id = id;
 		CourseId = courseId;
@@ -12,19 +18,25 @@ public class Lesson
 		LessonText = lessonText;
 	}
 
-	public Guid Id { get; private set; }
+	public Guid Id { get; }
 
-	public Guid CourseId { get; private set; }
+	public Guid CourseId { get; }
 
-	public string Title { get; private set; } = string.Empty;
+	public string Title { get; } = string.Empty;
 
-	public string Description { get; private set; } = string.Empty;
+	public string Description { get; } = string.Empty;
 
-	public string VideoLink { get; private set; } = string.Empty;
+	public string VideoLink { get; } = string.Empty;
 
-	public string LessonText { get; private set; } = string.Empty;
+	public string LessonText { get; } = string.Empty;
 
-	public static Lesson Create(Guid id, Guid courseId, string title, string description, string videoLink, string lessonText)
+	public static Lesson Create(
+        Guid id,
+        Guid courseId,
+        string title,
+        string description,
+        string videoLink,
+        string lessonText)
 	{
 		if (string.IsNullOrEmpty(title)) throw new ArgumentException("Title cannot be null!");
 

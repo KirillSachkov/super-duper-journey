@@ -1,6 +1,6 @@
 ﻿using LearningPlatform.Application.Interfaces.Auth;
 
-namespace LearninPlatform.Infrastructure;
+namespace LearninPlatform.Infrastructure.Authentication;
 public class PasswordHasher : IPasswordHasher
 {
     public string Generate(string password)
