@@ -1,5 +1,6 @@
 using LearningPlatform.API.Extensions;
 using LearningPlatform.API.Infrastructure;
+using LearningPlatform.API.Middlewares;
 using LearningPlatform.Application;
 using LearningPlatform.Persistence;
 using LearningPlatform.Persistence.Mappings;
@@ -47,6 +48,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
+
+app.UseMiddleware<RequestLogContextMiddleware>();
 
 app.UseSerilogRequestLogging();
 
