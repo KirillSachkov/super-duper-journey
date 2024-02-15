@@ -1,10 +1,8 @@
-﻿using LearningPlatform.Core.Enums;
-
-namespace LearningPlatform.Persistence.Entities;
+﻿namespace LearningPlatform.Persistence.Entities;
 
 public class RolePermissionEntity
 {
-    public Role Role { get; set; }
+    public int RoleId { get; set; }
 
-    public Permission Permission { get; set; }
+    public int PermissionId { get; set; }
 }

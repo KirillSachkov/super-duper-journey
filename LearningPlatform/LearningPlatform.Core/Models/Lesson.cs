@@ -38,13 +38,17 @@ public class Lesson
         string videoLink,
         string lessonText)
 	{
-		if (string.IsNullOrEmpty(title)) throw new ArgumentException("Title cannot be null!");
+		if (string.IsNullOrEmpty(title))
+			throw new ArgumentException("Title cannot be null!");
 
-		if (string.IsNullOrEmpty(description)) throw new ArgumentException("Description cannot be null!");
+		if (string.IsNullOrEmpty(description))
+			throw new ArgumentException("Description cannot be null!");
 
-		if (string.IsNullOrEmpty(videoLink)) throw new ArgumentException("VideoLink cannot be null!");
+		if (string.IsNullOrEmpty(videoLink))
+			throw new ArgumentException("VideoLink cannot be null!");
 
-		if( string.IsNullOrEmpty(lessonText)) throw new ArgumentException("LessonText cannot be null!");
+		if(string.IsNullOrEmpty(lessonText))
+			throw new ArgumentException("LessonText cannot be null!");
 
 		return new Lesson(id, courseId, title, description, videoLink, lessonText);
 	}

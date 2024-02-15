@@ -1,10 +1,8 @@
-using LearningPlatform.Core.Enums;
-
 namespace LearningPlatform.Persistence;
 
 public class PermissionEntity
 {
-    public Permission Permission { get; set; }
+    public int Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
 

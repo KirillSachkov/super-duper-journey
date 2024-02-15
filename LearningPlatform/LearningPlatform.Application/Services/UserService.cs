@@ -3,7 +3,7 @@ using LearningPlatform.Application.Interfaces.Repositories;
 using LearningPlatform.Core.Models;
 
 namespace LearningPlatform.Application.Services;
-public class UserService
+public class UserService : IUserService
 {
     private readonly IUsersRepository _usersRepository;
     private readonly IPasswordHasher _passwordHasher;

@@ -8,13 +8,13 @@ public partial class PermissionConfiguration : IEntityTypeConfiguration<Permissi
 {
     public void Configure(EntityTypeBuilder<PermissionEntity> builder)
     {
-        builder.HasKey(p => p.Permission);
+        builder.HasKey(p => p.Id);
 
         var permissions = Enum
             .GetValues<Permission>()
             .Select(p => new PermissionEntity
             {
-                Permission = p,
+                Id = (int)p,
                 Name = p.ToString()
             });
 

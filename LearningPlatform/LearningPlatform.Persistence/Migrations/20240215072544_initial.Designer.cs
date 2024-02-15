@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearningPlatform.Persistence.Migrations
 {
     [DbContext(typeof(LearningDbContext))]
-    [Migration("20240214080356_initial")]
+    [Migration("20240215072544_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -81,43 +81,43 @@ namespace LearningPlatform.Persistence.Migrations
 
             modelBuilder.Entity("LearningPlatform.Persistence.Entities.RolePermissionEntity", b =>
                 {
-                    b.Property<int>("Role")
+                    b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Permission")
+                    b.Property<int>("PermissionId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Role", "Permission");
+                    b.HasKey("RoleId", "PermissionId");
 
-                    b.HasIndex("Permission");
+                    b.HasIndex("PermissionId");
 
                     b.ToTable("RolePermissionEntity");
 
                     b.HasData(
                         new
                         {
-                            Role = 1,
-                            Permission = 2
+                            RoleId = 1,
+                            PermissionId = 2
                         },
                         new
                         {
-                            Role = 1,
-                            Permission = 1
+                            RoleId = 1,
+                            PermissionId = 1
                         },
                         new
                         {
-                            Role = 1,
-                            Permission = 3
+                            RoleId = 1,
+                            PermissionId = 3
                         },
                         new
                         {
-                            Role = 1,
-                            Permission = 4
+                            RoleId = 1,
+                            PermissionId = 4
                         },
                         new
                         {
-                            Role = 2,
-                            Permission = 1
+                            RoleId = 2,
+                            PermissionId = 1
                         });
                 });
 
@@ -144,81 +144,87 @@ namespace LearningPlatform.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("LearningPlatform.Persistence.Entities.UserRoleEntity", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRoleEntity");
+                });
+
             modelBuilder.Entity("LearningPlatform.Persistence.PermissionEntity", b =>
                 {
-                    b.Property<int>("Permission")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Permission");
+                    b.HasKey("Id");
 
                     b.ToTable("PermissionEntity");
 
                     b.HasData(
                         new
                         {
-                            Permission = 1,
+                            Id = 1,
                             Name = "Read"
                         },
                         new
                         {
-                            Permission = 2,
+                            Id = 2,
                             Name = "Create"
                         },
                         new
                         {
-                            Permission = 3,
+                            Id = 3,
                             Name = "Update"
                         },
                         new
                         {
-                            Permission = 4,
+                            Id = 4,
                             Name = "Delete"
                         });
                 });
 
             modelBuilder.Entity("LearningPlatform.Persistence.RoleEntity", b =>
                 {
-                    b.Property<int>("Role")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Role");
+                    b.HasKey("Id");
 
                     b.ToTable("Roles");
 
                     b.HasData(
                         new
                         {
-                            Role = 1,
+                            Id = 1,
                             Name = "Admin"
                         },
                         new
                         {
-                            Role = 2,
+                            Id = 2,
                             Name = "User"
                         });
-                });
-
-            modelBuilder.Entity("RoleEntityUserEntity", b =>
-                {
-                    b.Property<int>("RolesRole")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("RolesRole", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleEntityUserEntity");
                 });
 
             modelBuilder.Entity("LearningPlatform.Persistence.Entities.LessonEntity", b =>
@@ -236,28 +242,28 @@ namespace LearningPlatform.Persistence.Migrations
                 {
                     b.HasOne("LearningPlatform.Persistence.PermissionEntity", null)
                         .WithMany()
-                        .HasForeignKey("Permission")
+                        .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearningPlatform.Persistence.RoleEntity", null)
                         .WithMany()
-                        .HasForeignKey("Role")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoleEntityUserEntity", b =>
+            modelBuilder.Entity("LearningPlatform.Persistence.Entities.UserRoleEntity", b =>
                 {
                     b.HasOne("LearningPlatform.Persistence.RoleEntity", null)
                         .WithMany()
-                        .HasForeignKey("RolesRole")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearningPlatform.Persistence.Entities.UserEntity", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

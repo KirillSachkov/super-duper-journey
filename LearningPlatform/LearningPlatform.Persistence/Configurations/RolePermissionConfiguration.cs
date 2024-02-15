@@ -11,7 +11,7 @@ public partial class RolePermissionConfiguration
 {
     public void Configure(EntityTypeBuilder<RolePermissionEntity> builder)
     {
-        builder.HasKey(r => new { r.Role, r.Permission});
+        builder.HasKey(r => new { r.RoleId, r.PermissionId });
 
         builder.HasData(Create(Role.Admin, Permission.Create),
                         Create(Role.Admin, Permission.Read),
@@ -23,7 +23,7 @@ public partial class RolePermissionConfiguration
     private static RolePermissionEntity Create(Role role, Permission permission)
         => new()
         {
-            Role = role,
-            Permission = permission
+            RoleId = (int)role,
+            PermissionId = (int)permission
         };
 }

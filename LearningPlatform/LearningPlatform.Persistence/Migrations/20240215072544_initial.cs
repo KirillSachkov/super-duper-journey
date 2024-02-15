@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -31,24 +32,26 @@ namespace LearningPlatform.Persistence.Migrations
                 name: "PermissionEntity",
                 columns: table => new
                 {
-                    Permission = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PermissionEntity", x => x.Permission);
+                    table.PrimaryKey("PK_PermissionEntity", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
-                    Role = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Role);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,45 +94,45 @@ namespace LearningPlatform.Persistence.Migrations
                 name: "RolePermissionEntity",
                 columns: table => new
                 {
-                    Role = table.Column<int>(type: "integer", nullable: false),
-                    Permission = table.Column<int>(type: "integer", nullable: false)
+                    RoleId = table.Column<int>(type: "integer", nullable: false),
+                    PermissionId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RolePermissionEntity", x => new { x.Role, x.Permission });
+                    table.PrimaryKey("PK_RolePermissionEntity", x => new { x.RoleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_RolePermissionEntity_PermissionEntity_Permission",
-                        column: x => x.Permission,
+                        name: "FK_RolePermissionEntity_PermissionEntity_PermissionId",
+                        column: x => x.PermissionId,
                         principalTable: "PermissionEntity",
-                        principalColumn: "Permission",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RolePermissionEntity_Roles_Role",
-                        column: x => x.Role,
+                        name: "FK_RolePermissionEntity_Roles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Roles",
-                        principalColumn: "Role",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleEntityUserEntity",
+                name: "UserRoleEntity",
                 columns: table => new
                 {
-                    RolesRole = table.Column<int>(type: "integer", nullable: false),
-                    UsersId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleEntityUserEntity", x => new { x.RolesRole, x.UsersId });
+                    table.PrimaryKey("PK_UserRoleEntity", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_RoleEntityUserEntity_Roles_RolesRole",
-                        column: x => x.RolesRole,
+                        name: "FK_UserRoleEntity_Roles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Roles",
-                        principalColumn: "Role",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleEntityUserEntity_Users_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_UserRoleEntity_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -137,7 +140,7 @@ namespace LearningPlatform.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "PermissionEntity",
-                columns: new[] { "Permission", "Name" },
+                columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
                     { 1, "Read" },
@@ -148,7 +151,7 @@ namespace LearningPlatform.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Roles",
-                columns: new[] { "Role", "Name" },
+                columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
                     { 1, "Admin" },
@@ -157,7 +160,7 @@ namespace LearningPlatform.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "RolePermissionEntity",
-                columns: new[] { "Permission", "Role" },
+                columns: new[] { "PermissionId", "RoleId" },
                 values: new object[,]
                 {
                     { 1, 1 },
@@ -173,14 +176,14 @@ namespace LearningPlatform.Persistence.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleEntityUserEntity_UsersId",
-                table: "RoleEntityUserEntity",
-                column: "UsersId");
+                name: "IX_RolePermissionEntity_PermissionId",
+                table: "RolePermissionEntity",
+                column: "PermissionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RolePermissionEntity_Permission",
-                table: "RolePermissionEntity",
-                column: "Permission");
+                name: "IX_UserRoleEntity_RoleId",
+                table: "UserRoleEntity",
+                column: "RoleId");
         }
 
         /// <inheritdoc />
@@ -190,22 +193,22 @@ namespace LearningPlatform.Persistence.Migrations
                 name: "Lessons");
 
             migrationBuilder.DropTable(
-                name: "RoleEntityUserEntity");
-
-            migrationBuilder.DropTable(
                 name: "RolePermissionEntity");
 
             migrationBuilder.DropTable(
-                name: "Courses");
+                name: "UserRoleEntity");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Courses");
 
             migrationBuilder.DropTable(
                 name: "PermissionEntity");
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

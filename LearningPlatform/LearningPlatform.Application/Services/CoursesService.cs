@@ -3,7 +3,7 @@ using LearningPlatform.Core.Models;
 
 namespace LearningPlatform.Application.Services;
 
-public class CoursesService
+public class CoursesService : ICoursesService
 {
     private readonly ICourseRepository _courseRepository;
 

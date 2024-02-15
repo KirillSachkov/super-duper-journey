@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LearningPlatform.Application.Interfaces.Repositories;
+using LearningPlatform.Core.Enums;
 using LearningPlatform.Core.Models;
 using LearningPlatform.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ public class UsersRepository : IUsersRepository
     public async Task Add(User user)
     {
         var roleEntity = await _context.Roles
-            .SingleOrDefaultAsync(r => r.Role == Core.Enums.Role.User)
+            .SingleOrDefaultAsync(r => r.Id == (int)Role.User)
             ?? throw new InvalidOperationException();
 
         var userEntity = new UserEntity()
@@ -28,10 +29,7 @@ public class UsersRepository : IUsersRepository
             UserName = user.UserName,
             PasswordHash = user.PasswordHash,
             Email = user.Email,
-            Roles = new List<RoleEntity>()
-            {
-                roleEntity
-            }
+            Roles = [roleEntity]
         };
 
         await _context.Users.AddAsync(userEntity);
@@ -47,7 +45,7 @@ public class UsersRepository : IUsersRepository
         return _mapper.Map<User>(userEntity);
     }
 
-    public async Task<HashSet<Core.Enums.Permission>> GetUserPermissions(Guid userId)
+    public async Task<HashSet<Permission>> GetUserPermissions(Guid userId)
     {
         var roles = await _context.Users
             .AsNoTracking()
@@ -60,7 +58,7 @@ public class UsersRepository : IUsersRepository
         return roles
             .SelectMany(r => r)
             .SelectMany(r => r.Permissions)
-            .Select(p => p.Permission)
+            .Select(p => (Permission)p.Id)
             .ToHashSet();
     }
 }

@@ -1,11 +1,10 @@
-﻿using LearningPlatform.Core.Enums;
-using LearningPlatform.Persistence.Entities;
+﻿using LearningPlatform.Persistence.Entities;
 
 namespace LearningPlatform.Persistence;
 
 public class RoleEntity
 {
-    public Role Role { get; set; }
+    public int Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
 
