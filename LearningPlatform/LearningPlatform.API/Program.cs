@@ -3,7 +3,7 @@ using LearningPlatform.API.Infrastructure;
 using LearningPlatform.API.Middlewares;
 using LearningPlatform.Application;
 using LearningPlatform.Persistence;
-using LearningPlatform.Persistence.Mappings;
+using LearninPlatform.Infrastructure;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -34,8 +34,6 @@ services
 
 builder.Services.AddProblemDetails();
 services.AddExceptionHandler<GlobalExceptionHandler>();
-
-services.AddAutoMapper(typeof(DataBaseMappings));
 
 var app = builder.Build();
 

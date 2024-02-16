@@ -1,89 +1,96 @@
 using LearningPlatform.API.Contracts.Lessons;
-using LearningPlatform.Application.Services;
-using LearningPlatform.Core.Models;
+using LearningPlatform.Core.Entities;
+using LearningPlatform.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearningPlatform.API.Endpoints;
 
 public static class LessonsEndpoints
 {
-	public static IEndpointRouteBuilder MapLessonsEndpoints(this IEndpointRouteBuilder app)
-	{
-		app.MapPost("lessons/{courseId:guid}", CreateLesson);
+    public static IEndpointRouteBuilder MapLessonsEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapPost("lessons/{courseId:guid}", CreateLesson);
 
-		app.MapGet("lessons/course/{courseId:guid}", GetLessons);
+        app.MapGet("lessons/course/{courseId:guid}", GetLessons);
 
-		app.MapGet("lessons/{id:guid}", GetLessonById);
+        app.MapGet("lessons/{id:guid}", GetLessonById);
 
-		app.MapPut("lessons/{id:guid}", UpdateLesson);
+        app.MapPut("lessons/{id:guid}", UpdateLesson);
 
-		app.MapDelete("lessons/{id:guid}", DeleteLesson);
+        app.MapDelete("lessons/{id:guid}", DeleteLesson);
 
-		return app;
-	}
+        return app;
+    }
 
-	private static async Task<IResult> CreateLesson(
-		[FromRoute] Guid courseId,
-		[FromBody] CreateLessonRequest request,
-		LessonsService lessonsService)
-	{
-		var lesson = Lesson.Create(
-			Guid.NewGuid(),
-			courseId,
-			request.Title,
-			request.Description,
-			request.VideoLink,
-			request.LessonText);
+    private static async Task<IResult> CreateLesson(
+        [FromRoute] Guid courseId,
+        [FromBody] CreateLessonRequest request,
+        ILessonsRepository lessonsRepository)
+    {
+        var lesson = new Lesson(Guid.NewGuid())
+        {
+            CourseId = courseId,
+            Title = request.Title,
+            Description = request.Description,
+            VideoLink = request.VideoLink,
+            LessonText = request.LessonText,
+        };
 
-		await lessonsService.CreateLesson(lesson);
+        await lessonsRepository.Add(lesson);
 
-		return Results.Ok();
-	}
+        return Results.Ok();
+    }
 
-	private static async Task<IResult> GetLessons(
-		[FromRoute] Guid courseId,
-		LessonsService lessonsService)
-	{
-		var lessons = await lessonsService.GetLessons(courseId);
+    private static async Task<IResult> GetLessons(
+        [FromRoute] Guid courseId,
+        ILessonsRepository lessonsRepository)
+    {
+        var lessons = await lessonsRepository.Get(courseId);
 
-		var response = lessons
-			.Select(l => new GetLessonsResponse(l.Id, l.CourseId, l.Title, l.Description, l.VideoLink, l.LessonText));
+        var response = lessons
+            .Select(l => new GetLessonsResponse(
+                l.Id,
+                l.CourseId,
+                l.Title,
+                l.Description,
+                l.VideoLink,
+                l.LessonText));
 
-		return Results.Ok(response);
-	}
+        return Results.Ok(response);
+    }
 
-	private static async Task<IResult> GetLessonById(
-		[FromRoute] Guid id,
-		LessonsService lessonsService)
-	{
-		var lesson = await lessonsService.GetLessonById(id);
+    private static async Task<IResult> GetLessonById(
+        [FromRoute] Guid id,
+        ILessonsRepository lessonsRepository)
+    {
+        var lesson = await lessonsRepository.GetById(id);
 
-		var response = new GetLessonsResponse(id, lesson.CourseId, lesson.Title, lesson.Description, lesson.VideoLink, lesson.LessonText);
+        var response = new GetLessonsResponse(id, lesson.CourseId, lesson.Title, lesson.Description, lesson.VideoLink, lesson.LessonText);
 
-		return Results.Ok(response);
-	}
+        return Results.Ok(response);
+    }
 
-	private static async Task<IResult> UpdateLesson(
-		[FromRoute] Guid id,
-		[FromBody] UpdateLessonRequest request,
-		LessonsService lessonsService)
-	{
-		await lessonsService.UpdateLesson(
-			id,
-			request.Title,
-			request.Description,
-			request.VideoLink,
-			request.LessonText);
+    private static async Task<IResult> UpdateLesson(
+        [FromRoute] Guid id,
+        [FromBody] UpdateLessonRequest request,
+        ILessonsRepository lessonsRepository)
+    {
+        await lessonsRepository.Update(
+            id,
+            request.Title,
+            request.Description,
+            request.VideoLink,
+            request.LessonText);
 
-		return Results.Ok();
-	}
+        return Results.Ok();
+    }
 
-	private static async Task<IResult> DeleteLesson(
-		[FromRoute] Guid id,
-		LessonsService lessonsSerice)
-	{
-		await lessonsSerice.DeleteLesson(id);
+    private static async Task<IResult> DeleteLesson(
+        [FromRoute] Guid id,
+        ILessonsRepository lessonsRepository)
+    {
+        await lessonsRepository.Delete(id);
 
-		return Results.Ok();
-	}
+        return Results.Ok();
+    }
 }

@@ -1,9 +1,9 @@
-﻿using LearningPlatform.Core.Models;
+﻿using LearningPlatform.Core.Entities;
 
-namespace LearningPlatform.Application.Interfaces.Repositories;
+namespace LearningPlatform.Core.Interfaces.Repositories;
 public interface ILessonsRepository
 {
-    Task Create(Lesson lesson);
+    Task Add(Lesson lesson);
     Task Delete(Guid id);
     Task<List<Lesson>> Get(Guid courseId);
     Task<Lesson> GetById(Guid id);

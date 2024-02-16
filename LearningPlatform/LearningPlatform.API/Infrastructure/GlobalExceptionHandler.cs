@@ -1,5 +1,4 @@
-﻿using LearningPlatform.API.Contracts;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 

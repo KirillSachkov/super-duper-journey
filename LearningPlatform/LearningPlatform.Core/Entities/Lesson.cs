@@ -1,12 +1,12 @@
-﻿namespace LearningPlatform.Persistence.Entities;
+﻿namespace LearningPlatform.Core.Entities;
 
-public class LessonEntity
+public class Lesson(Guid id) : Entity<Guid>(id)
 {
-    public Guid Id { get; set; }
-
     public Guid CourseId { get; set; }
 
-    public CourseEntity? Course { get; set; }
+    public Course? Course { get; set; }
+
+    public bool IsCompleted { get; set; }
 
     public string LessonText { get; set; } = string.Empty;
 

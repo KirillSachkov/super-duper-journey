@@ -1,4 +1,4 @@
-﻿using LearningPlatform.Persistence.Entities;
+﻿using LearningPlatform.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Permission = LearningPlatform.Core.Enums.Permission;
@@ -7,20 +7,19 @@ using Role = LearningPlatform.Core.Enums.Role;
 namespace LearningPlatform.Persistence.Configurations;
 
 public partial class RolePermissionConfiguration
-    : IEntityTypeConfiguration<RolePermissionEntity>
+    : IEntityTypeConfiguration<RolePermission>
 {
-    public void Configure(EntityTypeBuilder<RolePermissionEntity> builder)
+    public void Configure(EntityTypeBuilder<RolePermission> builder)
     {
+        builder.ToTable("RolePermissions");
+
         builder.HasKey(r => new { r.RoleId, r.PermissionId });
 
-        builder.HasData(Create(Role.Admin, Permission.Create),
-                        Create(Role.Admin, Permission.Read),
-                        Create(Role.Admin, Permission.Update),
-                        Create(Role.Admin, Permission.Delete),
-                        Create(Role.User, Permission.Read));
+        builder.HasData(Create(Role.Author, Permission.Author),
+                        Create(Role.Student, Permission.Student));
     }
 
-    private static RolePermissionEntity Create(Role role, Permission permission)
+    private static RolePermission Create(Role role, Permission permission)
         => new()
         {
             RoleId = (int)role,

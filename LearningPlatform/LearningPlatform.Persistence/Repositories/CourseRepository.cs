@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using LearningPlatform.Application.Interfaces.Repositories;
-using LearningPlatform.Core.Models;
-using LearningPlatform.Persistence.Entities;
+﻿using LearningPlatform.Core.Entities;
+using LearningPlatform.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatform.Persistence.Repositories;
@@ -9,25 +7,15 @@ namespace LearningPlatform.Persistence.Repositories;
 public class CourseRepository : ICourseRepository
 {
     private readonly LearningDbContext _context;
-    private readonly IMapper _mapper;
 
-    public CourseRepository(LearningDbContext context, IMapper mapper)
+    public CourseRepository(LearningDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
-    public async Task Create(Course course)
+    public async Task Add(Course course)
     {
-        var courseEntity = new CourseEntity()
-        {
-            Id = course.Id,
-            Title = course.Title,
-            Description = course.Description,
-            Price = course.Price
-        };
-
-        await _context.Courses.AddAsync(courseEntity);
+        await _context.Courses.AddAsync(course);
         await _context.SaveChangesAsync();
     }
 
@@ -37,7 +25,7 @@ public class CourseRepository : ICourseRepository
             .AsNoTracking()
             .ToListAsync();
 
-        return _mapper.Map<List<Course>>(courseEntities);
+        return courseEntities;
     }
 
     public async Task<Course> GetById(Guid id)
@@ -46,7 +34,7 @@ public class CourseRepository : ICourseRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == id) ?? throw new Exception();
 
-        return _mapper.Map<Course>(courseEntity);
+        return courseEntity;
     }
 
     public async Task Update(Guid id, string title, string description, decimal price)

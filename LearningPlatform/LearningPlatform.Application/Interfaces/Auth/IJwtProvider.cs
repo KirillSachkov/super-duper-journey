@@ -1,4 +1,4 @@
-﻿using LearningPlatform.Core.Models;
+﻿using LearningPlatform.Core.Entities;
 
 namespace LearningPlatform.Application.Interfaces.Auth;
 public interface IJwtProvider

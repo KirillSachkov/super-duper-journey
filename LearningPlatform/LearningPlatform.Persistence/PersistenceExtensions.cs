@@ -1,4 +1,4 @@
-﻿using LearningPlatform.Application.Interfaces.Repositories;
+﻿using LearningPlatform.Core.Interfaces.Repositories;
 using LearningPlatform.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +10,7 @@ public static class PersistenceExtensions
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddScoped<ILessonsRepository, LessonsRepository>();
         services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
 
         return services;
     }

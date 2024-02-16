@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using LearningPlatform.Core.Interfaces.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LearninPlatform.Infrastructure.Authentication;
@@ -25,10 +26,10 @@ public class PermissionAuthorizationHandler
 
         using var scope = _scopeFactory.CreateScope();
 
-        var permissionService = scope.ServiceProvider
-            .GetRequiredService<IPermissionService>();
+        var usersRepository = scope.ServiceProvider
+            .GetRequiredService<IUsersRepository>();
 
-        var permissions = await permissionService.GetPermissionsAsync(id);
+        var permissions = await usersRepository.GetUserPermissions(id);
 
         if (permissions.Intersect(requirement.Permissions).Any())
         {

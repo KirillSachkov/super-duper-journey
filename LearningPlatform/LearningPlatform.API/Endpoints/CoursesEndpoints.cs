@@ -1,7 +1,7 @@
 ﻿using LearningPlatform.API.Contracts.Courses;
 using LearningPlatform.API.Extensions;
-using LearningPlatform.Application.Services;
-using LearningPlatform.Core.Models;
+using LearningPlatform.Core.Entities;
+using LearningPlatform.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 using Permission = LearningPlatform.Core.Enums.Permission;
@@ -12,46 +12,45 @@ public static class CoursesEndpoints
 {
     public static IEndpointRouteBuilder MapCoursesEndpoints(this IEndpointRouteBuilder app)
     {
-        var endpoints = app.MapGroup("course");
+        var endpoints = app.MapGroup("courses");
 
         endpoints.MapPost(string.Empty, CreateCourse)
-            .RequirePermissions(Permission.Create);
+            .RequirePermissions(Permission.Author);
 
         endpoints.MapGet(string.Empty, GetCourses)
-            .RequirePermissions(Permission.Read);
+            .RequirePermissions(Permission.Student);
 
         endpoints.MapGet("{id:guid}", GetCourseById)
-            .RequirePermissions(Permission.Read);
+            .RequirePermissions(Permission.Student);
 
         endpoints.MapPut("{id:guid}", UpdateCourse)
-            .RequirePermissions(Permission.Update);
+            .RequirePermissions(Permission.Author);
 
         endpoints.MapDelete("{id:guid}", DeleteCourse)
-            .RequirePermissions(Permission.Delete);
+            .RequirePermissions(Permission.Author);
 
         return endpoints;
     }
 
     private static async Task<IResult> CreateCourse(
         [FromBody] CreateCourseRequest request,
-        HttpContext context,
-        CoursesService coursesService)
+        ICourseRepository coursesRepository)
     {
-        var course = Course.Create(
-            Guid.NewGuid(),
-            request.Title,
-            request.Description,
-            request.Price);
+        var course = new Course(Guid.NewGuid())
+        {
+            Title = request.Title,
+            Description = request.Description,
+            Price = request.Price
+        };
 
-        await coursesService.CreateCourse(course);
+        await coursesRepository.Add(course);
 
         return Results.Ok();
     }
 
-    private static async Task<IResult> GetCourses(
-        CoursesService coursesService, HttpContext context)
+    private static async Task<IResult> GetCourses(ICourseRepository coursesRepository)
     {
-        var courses = await coursesService.GetCourses();
+        var courses = await coursesRepository.Get();
 
         var response = courses
             .Select(c => new GetCourseResponse(c.Id, c.Title, c.Description, c.Price));
@@ -61,11 +60,15 @@ public static class CoursesEndpoints
 
     private static async Task<IResult> GetCourseById(
         [FromRoute] Guid id,
-        CoursesService coursesService)
+        ICourseRepository coursesRepository)
     {
-        var course = await coursesService.GetCourseById(id);
+        var course = await coursesRepository.GetById(id);
 
-        var response = new GetCourseResponse(course.Id, course.Title, course.Description, course.Price);
+        var response = new GetCourseResponse(
+            course.Id,
+            course.Title,
+            course.Description,
+            course.Price);
 
         return Results.Ok(response);
     }
@@ -73,18 +76,22 @@ public static class CoursesEndpoints
     private static async Task<IResult> UpdateCourse(
     [FromRoute] Guid id,
     [FromBody] UpdateCourseRequest request,
-    CoursesService coursesService)
+    ICourseRepository coursesRepository)
     {
-        await coursesService.UpdateCourse(id, request.Title, request.Description, request.Price);
+        await coursesRepository.Update(
+            id,
+            request.Title,
+            request.Description,
+            request.Price);
 
         return Results.Ok();
     }
 
     private static async Task<IResult> DeleteCourse(
         [FromRoute] Guid id,
-        CoursesService coursesService)
+        ICourseRepository coursesRepository)
     {
-        await coursesService.DeleteCourse(id);
+        await coursesRepository.Delete(id);
 
         return Results.Ok();
     }

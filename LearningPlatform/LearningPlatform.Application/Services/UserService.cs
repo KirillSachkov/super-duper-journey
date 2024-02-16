@@ -1,6 +1,7 @@
-﻿using LearningPlatform.Application.Interfaces.Auth;
-using LearningPlatform.Application.Interfaces.Repositories;
-using LearningPlatform.Core.Models;
+﻿using LearningPlatform.Application.Interfaces;
+using LearningPlatform.Application.Interfaces.Auth;
+using LearningPlatform.Core.Entities;
+using LearningPlatform.Core.Interfaces.Repositories;
 
 namespace LearningPlatform.Application.Services;
 public class UserService : IUserService
@@ -19,17 +20,22 @@ public class UserService : IUserService
         _jwtProvider = jwtProvider;
     }
 
-    public async Task Register(string userName, string email, string password)
+    public async Task Register(
+        string userName,
+        string email,
+        string password,
+        Core.Enums.Role role)
     {
         var hashedPassword = _passwordHasher.Generate(password);
 
-        var user = User.Create(
-            Guid.NewGuid(),
-            userName,
-            hashedPassword,
-            email);
+        var user = new User(Guid.NewGuid())
+        {
+            UserName = userName,
+            Email = email,
+            PasswordHash = hashedPassword,
+        };
 
-        await _usersRepository.Add(user);
+        await _usersRepository.Add(user, role);
     }
 
     public async Task<string> Login(string email, string password)

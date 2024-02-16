@@ -2,6 +2,7 @@ namespace LearningPlatform.Core.Enums;
 
 public enum Role
 {
-    Admin = 1,
-    User = 2
+    Author = 1,
+    Student = 2,
+    User = 3
 }

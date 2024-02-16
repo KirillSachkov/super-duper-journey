@@ -2,7 +2,7 @@
 using LearninPlatform.Infrastructure.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LearningPlatform.Persistence;
+namespace LearninPlatform.Infrastructure;
 public static class InfrastructureExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)

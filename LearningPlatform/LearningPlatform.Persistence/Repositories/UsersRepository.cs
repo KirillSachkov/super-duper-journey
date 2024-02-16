@@ -1,38 +1,31 @@
-﻿using AutoMapper;
-using LearningPlatform.Application.Interfaces.Repositories;
-using LearningPlatform.Core.Enums;
-using LearningPlatform.Core.Models;
-using LearningPlatform.Persistence.Entities;
+﻿using LearningPlatform.Core.Entities;
+using LearningPlatform.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatform.Persistence.Repositories;
 public class UsersRepository : IUsersRepository
 {
     private readonly LearningDbContext _context;
-    private readonly IMapper _mapper;
 
-    public UsersRepository(LearningDbContext context, IMapper mapper)
+    public UsersRepository(LearningDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
-    public async Task Add(User user)
+    public async Task<List<User>> Get()
+    {
+        return await _context.Users.AsNoTracking().ToListAsync();
+    }
+
+    public async Task Add(User user, Core.Enums.Role role)
     {
         var roleEntity = await _context.Roles
-            .SingleOrDefaultAsync(r => r.Id == (int)Role.User)
+            .SingleOrDefaultAsync(r => r.Id == (int)role)
             ?? throw new InvalidOperationException();
 
-        var userEntity = new UserEntity()
-        {
-            Id = user.Id,
-            UserName = user.UserName,
-            PasswordHash = user.PasswordHash,
-            Email = user.Email,
-            Roles = [roleEntity]
-        };
+        user.Roles = [roleEntity];
 
-        await _context.Users.AddAsync(userEntity);
+        await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
     }
 
@@ -42,10 +35,10 @@ public class UsersRepository : IUsersRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email) ?? throw new Exception();
 
-        return _mapper.Map<User>(userEntity);
+        return userEntity;
     }
 
-    public async Task<HashSet<Permission>> GetUserPermissions(Guid userId)
+    public async Task<HashSet<Core.Enums.Permission>> GetUserPermissions(Guid userId)
     {
         var roles = await _context.Users
             .AsNoTracking()
@@ -58,7 +51,7 @@ public class UsersRepository : IUsersRepository
         return roles
             .SelectMany(r => r)
             .SelectMany(r => r.Permissions)
-            .Select(p => (Permission)p.Id)
+            .Select(p => (Core.Enums.Permission)p.Id)
             .ToHashSet();
     }
 }

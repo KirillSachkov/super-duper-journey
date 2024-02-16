@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LearningPlatform.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace LearningPlatform.API.Contracts.Users;
 
 public record RegisterUserRequest(
 	[Required] string UserName,
 	[Required] string Password,
-	[Required] string Email);
+	[Required] string Email,
+	[Required] Role role);

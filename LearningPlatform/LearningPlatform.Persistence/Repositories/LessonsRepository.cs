@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using LearningPlatform.Application.Interfaces.Repositories;
-using LearningPlatform.Core.Models;
-using LearningPlatform.Persistence.Entities;
+﻿using LearningPlatform.Core.Entities;
+using LearningPlatform.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatform.Persistence.Repositories;
@@ -9,27 +7,15 @@ namespace LearningPlatform.Persistence.Repositories;
 public class LessonsRepository : ILessonsRepository
 {
     private readonly LearningDbContext _context;
-    private readonly IMapper _mapper;
 
-    public LessonsRepository(LearningDbContext context, IMapper mapper)
+    public LessonsRepository(LearningDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
-    public async Task Create(Lesson lesson)
+    public async Task Add(Lesson lesson)
     {
-        var lessonEntity = new LessonEntity()
-        {
-            Id = lesson.Id,
-            CourseId = lesson.CourseId,
-            Title = lesson.Title,
-            Description = lesson.Description,
-            VideoLink = lesson.VideoLink,
-            LessonText = lesson.LessonText
-        };
-
-        await _context.Lessons.AddAsync(lessonEntity);
+        await _context.Lessons.AddAsync(lesson);
         await _context.SaveChangesAsync();
     }
 
@@ -40,7 +26,7 @@ public class LessonsRepository : ILessonsRepository
             .Where(l => l.CourseId == courseId)
             .ToListAsync();
 
-        return _mapper.Map<List<Lesson>>(lessonEntity);
+        return lessonEntity;
     }
 
     public async Task<Lesson> GetById(Guid id)
@@ -49,7 +35,7 @@ public class LessonsRepository : ILessonsRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(l => l.Id == id) ?? throw new Exception();
 
-        return _mapper.Map<Lesson>(lessonEntity);
+        return lessonEntity;
     }
 
     public async Task Update(
