@@ -66,7 +66,7 @@ namespace LearningPlatform.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Author", (string)null);
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("LearningPlatform.Core.Entities.Comment", b =>
@@ -86,7 +86,7 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comment", (string)null);
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("LearningPlatform.Core.Entities.Course", b =>
@@ -111,7 +111,9 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Course", (string)null);
+                    b.HasIndex("Title");
+
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("LearningPlatform.Core.Entities.Lesson", b =>
@@ -130,9 +132,6 @@ namespace LearningPlatform.Persistence.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("LessonProgressId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("LessonText")
                         .IsRequired()
                         .HasColumnType("text");
@@ -149,7 +148,7 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Lesson", (string)null);
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("LearningPlatform.Core.Entities.Permission", b =>
@@ -166,18 +165,68 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permission", (string)null);
+                    b.ToTable("Permissions", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Name = "Author"
+                            Name = "CreateCourse"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Student"
+                            Name = "ReadCourse"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "UpdateCourse"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "DeleteCourse"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "CreateLesson"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "ReadLesson"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "UpdateLesson"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "DeleteLesson"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "CreateComment"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "ReadComment"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "UpdateComment"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "DeleteComment"
                         });
                 });
 
@@ -195,7 +244,7 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role", (string)null);
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -207,11 +256,6 @@ namespace LearningPlatform.Persistence.Migrations
                         {
                             Id = 2,
                             Name = "Student"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "User"
                         });
                 });
 
@@ -227,7 +271,7 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermission", (string)null);
+                    b.ToTable("RolePermissions", (string)null);
 
                     b.HasData(
                         new
@@ -237,8 +281,73 @@ namespace LearningPlatform.Persistence.Migrations
                         },
                         new
                         {
+                            RoleId = 1,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 10
+                        },
+                        new
+                        {
                             RoleId = 2,
                             PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 10
                         });
                 });
 
@@ -256,7 +365,7 @@ namespace LearningPlatform.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Student", (string)null);
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("LearningPlatform.Core.Entities.User", b =>
@@ -294,7 +403,7 @@ namespace LearningPlatform.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRole", (string)null);
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("AuthorCourse", b =>

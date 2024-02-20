@@ -1,7 +1,15 @@
-version: "3.1"
+version: '3.4'
 
 services:
-  postgres:
+  learningplatform.api:
+    image: ${DOCKER_REGISTRY-}learningplatformapi
+    build:
+      context: .
+      dockerfile: LearningPlatform.API/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+  learningplatform.postgres:
     container_name: postgres
     image: postgres
     restart: always
@@ -13,7 +21,7 @@ services:
       - 5432:5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
-  seq:
+  learningplatform.seq:
     image: datalust/seq
     container_name: seq
     environment:

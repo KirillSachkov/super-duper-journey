@@ -20,7 +20,7 @@ public partial class RoleConfiguration : IEntityTypeConfiguration<Core.Entities.
 
         var roles = Enum
             .GetValues<Core.Enums.Role>()
-            .Select(r => new Core.Entities.Role((int)r)
+            .Select(r => new Role((int)r)
             {
                 Id = (int)r,
                 Name = r.ToString()

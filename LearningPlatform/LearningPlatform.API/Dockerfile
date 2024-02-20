@@ -3,14 +3,18 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5000
+EXPOSE 5001
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["LearningPlatform.API/LearningPlatform.API.csproj", "LearningPlatform.API/"]
-RUN dotnet restore "./LearningPlatform.API/./LearningPlatform.API.csproj"
+COPY ["LearningPlatform.Application/LearningPlatform.Application.csproj", "LearningPlatform.Application/"]
+COPY ["LearningPlatform.Core/LearningPlatform.Core.csproj", "LearningPlatform.Core/"]
+COPY ["LearningPlatform.Persistence/LearningPlatform.Persistence.csproj", "LearningPlatform.Persistence/"]
+COPY ["LearninPlatform.Infrastructure/LearninPlatform.Infrastructure.csproj", "LearninPlatform.Infrastructure/"]
+RUN dotnet restore "./LearningPlatform.API/LearningPlatform.API.csproj"
 COPY . .
 WORKDIR "/src/LearningPlatform.API"
 RUN dotnet build "./LearningPlatform.API.csproj" -c $BUILD_CONFIGURATION -o /app/build

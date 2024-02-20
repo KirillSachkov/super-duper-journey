@@ -2,6 +2,18 @@
 
 public enum Permission
 {
-    Author = 1,
-    Student = 2
+    CreateCourse = 1,
+    ReadCourse,
+    UpdateCourse,
+    DeleteCourse,
+
+    CreateLesson,
+    ReadLesson,
+    UpdateLesson,
+    DeleteLesson,
+
+    CreateComment,
+    ReadComment,
+    UpdateComment,
+    DeleteComment,
 }

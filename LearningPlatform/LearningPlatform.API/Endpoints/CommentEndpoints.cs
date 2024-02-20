@@ -15,19 +15,19 @@ public static class CommentEndpoints
         var endpoints = app.MapGroup("comments");
 
         endpoints.MapPost(string.Empty, CreateComment)
-            .RequirePermissions(Permission.Author, Permission.Student);
+            .RequirePermissions(Permission.CreateComment);
 
         endpoints.MapGet(string.Empty, GetComments)
-            .RequirePermissions(Permission.Author, Permission.Student);
+            .RequirePermissions(Permission.ReadComment);
 
         endpoints.MapGet("{id:guid}", GetCommentById)
-            .RequirePermissions(Permission.Author, Permission.Student);
+            .RequirePermissions(Permission.ReadComment);
 
         endpoints.MapPut("{id:guid}", UpdateComment)
-            .RequirePermissions(Permission.Author, Permission.Student);
+            .RequirePermissions(Permission.UpdateComment);
 
         endpoints.MapDelete("{id:guid}", DeleteComment)
-            .RequirePermissions(Permission.Author, Permission.Student);
+            .RequirePermissions(Permission.DeleteComment);
 
         return endpoints;
     }

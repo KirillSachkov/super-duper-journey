@@ -11,6 +11,8 @@ public partial class CourseConfiguration : IEntityTypeConfiguration<Course>
     {
         builder.ToTable("Courses");
 
+        builder.HasIndex(c => c.Title);
+
         builder.HasKey(c => c.Id);
 
         builder.HasMany(c => c.Lessons)

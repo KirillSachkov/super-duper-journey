@@ -3,7 +3,7 @@ using LearningPlatform.API.Extensions;
 using LearningPlatform.Core.Entities;
 using LearningPlatform.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Reflection.Metadata.Ecma335;
 using Permission = LearningPlatform.Core.Enums.Permission;
 
 namespace LearningPlatform.API.Endpoints;
@@ -15,19 +15,26 @@ public static class CoursesEndpoints
         var endpoints = app.MapGroup("courses");
 
         endpoints.MapPost(string.Empty, CreateCourse)
-            .RequirePermissions(Permission.Author);
+            .RequirePermissions(Permission.CreateCourse);
 
         endpoints.MapGet(string.Empty, GetCourses)
-            .RequirePermissions(Permission.Student);
+            .RequirePermissions(Permission.ReadCourse);
 
         endpoints.MapGet("{id:guid}", GetCourseById)
-            .RequirePermissions(Permission.Student);
+            .RequirePermissions(Permission.ReadCourse);
 
         endpoints.MapPut("{id:guid}", UpdateCourse)
-            .RequirePermissions(Permission.Author);
+            .RequirePermissions(Permission.UpdateCourse);
 
         endpoints.MapDelete("{id:guid}", DeleteCourse)
-            .RequirePermissions(Permission.Author);
+            .RequirePermissions(Permission.DeleteCourse);
+
+        endpoints.MapPost("{id:guid}/complete",
+            ([FromRoute] Guid id, bool complete) => Results.Ok())
+            .RequirePermissions(Permission.ReadCourse);
+
+        endpoints.MapPost("{id:guid}/subscribe",
+            ([FromRoute] Guid id) => Results.Ok());
 
         return endpoints;
     }

@@ -1,4 +1,5 @@
 using LearningPlatform.API.Contracts.Lessons;
+using LearningPlatform.API.Extensions;
 using LearningPlatform.Core.Entities;
 using LearningPlatform.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -9,15 +10,24 @@ public static class LessonsEndpoints
 {
     public static IEndpointRouteBuilder MapLessonsEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("lessons/{courseId:guid}", CreateLesson);
+        app.MapPost("lessons/{courseId:guid}", CreateLesson)
+            .RequirePermissions(Core.Enums.Permission.CreateLesson);
 
-        app.MapGet("lessons/course/{courseId:guid}", GetLessons);
+        app.MapGet("lessons/course/{courseId:guid}", GetLessons)
+            .RequirePermissions(Core.Enums.Permission.ReadLesson);
 
-        app.MapGet("lessons/{id:guid}", GetLessonById);
+        app.MapGet("lessons/{id:guid}", GetLessonById)
+            .RequirePermissions(Core.Enums.Permission.ReadLesson);
 
-        app.MapPut("lessons/{id:guid}", UpdateLesson);
+        app.MapPut("lessons/{id:guid}", UpdateLesson)
+            .RequirePermissions(Core.Enums.Permission.UpdateLesson);
 
-        app.MapDelete("lessons/{id:guid}", DeleteLesson);
+        app.MapDelete("lessons/{id:guid}", DeleteLesson)
+            .RequirePermissions(Core.Enums.Permission.DeleteLesson);
+
+        app.MapPost("lessons/{id:guid}/complete",
+            ([FromRoute] Guid id, bool complete) => Results.Ok())
+            .RequirePermissions(Core.Enums.Permission.ReadLesson);
 
         return app;
     }
