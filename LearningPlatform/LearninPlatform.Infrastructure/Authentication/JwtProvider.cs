@@ -1,4 +1,4 @@
-﻿using LearningPlatform.Application.Interfaces.Auth;
+﻿using LearningPlatform.Application.Auth;
 using LearningPlatform.Core.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -16,7 +16,8 @@ public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
     {
         Claim[] claims =
         [
-            new (CustomClaims.UserId, user.Id.ToString())
+            new (CustomClaims.UserId, user.Id.ToString()),
+            new ("Admin", "true")
         ];
 
         var signingCredentials = new SigningCredentials(

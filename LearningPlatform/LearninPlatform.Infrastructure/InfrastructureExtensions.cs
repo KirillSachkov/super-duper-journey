@@ -1,4 +1,4 @@
-﻿using LearningPlatform.Application.Interfaces.Auth;
+﻿using LearningPlatform.Application.Auth;
 using LearninPlatform.Infrastructure.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 

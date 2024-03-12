@@ -1,6 +1,6 @@
-﻿using AutoMapper.Features;
-using LearningPlatform.API.Endpoints;
+﻿using LearningPlatform.API.Endpoints;
 using LearningPlatform.Core.Enums;
+using LearningPlatform.Core.Interfaces.Services;
 using LearninPlatform.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -22,8 +22,6 @@ public static class ApiExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
-
         var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 
         services
@@ -62,7 +60,15 @@ public static class ApiExtensions
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminPolicy", policy =>
+            {
+                policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+
+                policy.Requirements.Add(new PermissionRequirement([Permission.CreateCourse]));
+            });
+        });
     }
 
     public static IEndpointConventionBuilder RequirePermissions<TBuilder>(
@@ -70,7 +76,7 @@ public static class ApiExtensions
             where TBuilder : IEndpointConventionBuilder
     {
         return builder
-            .RequireAuthorization(pb => 
+            .RequireAuthorization(pb =>
                 pb.AddRequirements(new PermissionRequirement(permissions)));
     }
 }

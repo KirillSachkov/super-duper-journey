@@ -15,4 +15,8 @@
     <ProjectReference Include="..\LearningPlatform.Core\LearningPlatform.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Auth\" />
+  </ItemGroup>
+
 </Project>

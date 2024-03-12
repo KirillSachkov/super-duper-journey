@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearningPlatform.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -143,10 +143,10 @@ namespace LearningPlatform.Persistence.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Read" },
-                    { 2, "Create" },
-                    { 3, "Update" },
-                    { 4, "Delete" }
+                    { 1, "ReadCourse" },
+                    { 2, "CreateCourse" },
+                    { 3, "UpdateCourse" },
+                    { 4, "DeleteCourse" }
                 });
 
             migrationBuilder.InsertData(
@@ -156,18 +156,6 @@ namespace LearningPlatform.Persistence.Migrations
                 {
                     { 1, "Admin" },
                     { 2, "User" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "RolePermissionEntity",
-                columns: new[] { "PermissionId", "RoleId" },
-                values: new object[,]
-                {
-                    { 1, 1 },
-                    { 2, 1 },
-                    { 3, 1 },
-                    { 4, 1 },
-                    { 1, 2 }
                 });
 
             migrationBuilder.CreateIndex(

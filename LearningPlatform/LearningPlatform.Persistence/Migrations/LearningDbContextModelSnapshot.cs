@@ -89,33 +89,6 @@ namespace LearningPlatform.Persistence.Migrations
                     b.HasIndex("PermissionId");
 
                     b.ToTable("RolePermissionEntity");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            PermissionId = 2
-                        },
-                        new
-                        {
-                            RoleId = 1,
-                            PermissionId = 1
-                        },
-                        new
-                        {
-                            RoleId = 1,
-                            PermissionId = 3
-                        },
-                        new
-                        {
-                            RoleId = 1,
-                            PermissionId = 4
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            PermissionId = 1
-                        });
                 });
 
             modelBuilder.Entity("LearningPlatform.Persistence.Entities.UserEntity", b =>
@@ -176,22 +149,22 @@ namespace LearningPlatform.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Read"
+                            Name = "ReadCourse"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Create"
+                            Name = "CreateCourse"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Update"
+                            Name = "UpdateCourse"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Delete"
+                            Name = "DeleteCourse"
                         });
                 });
 

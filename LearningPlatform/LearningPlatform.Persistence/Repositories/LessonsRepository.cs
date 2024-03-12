@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LearningPlatform.Application.Interfaces.Repositories;
+using LearningPlatform.Core.Interfaces.Repositories;
 using LearningPlatform.Core.Models;
 using LearningPlatform.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;

@@ -13,14 +13,14 @@ services:
       - 5432:5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
-  seq:
-    image: datalust/seq
-    container_name: seq
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - 5341:5341
-      - 8081:80
+  # seq:
+  #   image: datalust/seq
+  #   container_name: seq
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #   ports:
+  #     - 5341:5341
+  #     - 8081:80
 
 volumes:
   postgres-data:

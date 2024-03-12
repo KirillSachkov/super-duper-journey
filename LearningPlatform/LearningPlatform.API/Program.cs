@@ -4,8 +4,8 @@ using LearningPlatform.API.Middlewares;
 using LearningPlatform.Application;
 using LearningPlatform.Persistence;
 using LearningPlatform.Persistence.Mappings;
+using LearninPlatform.Infrastructure.Authentication;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,13 +22,11 @@ services.AddEndpointsApiExplorer();
 
 services.AddSwaggerGen();
 
-services.AddDbContext<LearningDbContext>(options =>
-{
-    options.UseNpgsql(configuration.GetConnectionString(nameof(LearningDbContext)));
-});
+services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
+services.Configure<AuthorizationOptions>(configuration.GetSection(nameof(AuthorizationOptions)));
 
 services
-    .AddPersistence()
+    .AddPersistence(configuration)
     .AddApplication()
     .AddInfrastructure();
 
@@ -65,5 +63,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.AddMappedEndpoints();
+
+app.MapGet("get", () =>
+{
+    return Results.Ok("ok");
+}).RequireAuthorization("AdminPolicy");
 
 app.Run();

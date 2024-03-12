@@ -1,4 +1,4 @@
-﻿namespace LearningPlatform.Application.Interfaces.Auth;
+﻿namespace LearningPlatform.Application.Auth;
 
 public interface IPasswordHasher
 {

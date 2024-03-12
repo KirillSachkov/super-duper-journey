@@ -2,8 +2,8 @@
 
 public enum Permission
 {
-    Read = 1,
-    Create = 2,
-    Update = 3,
-    Delete = 4
+    ReadCourse = 1,
+    CreateCourse = 2,
+    UpdateCourse = 3,
+    DeleteCourse = 4
 }

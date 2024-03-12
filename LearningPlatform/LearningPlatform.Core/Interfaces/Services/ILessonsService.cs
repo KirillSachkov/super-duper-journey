@@ -1,6 +1,6 @@
 ﻿using LearningPlatform.Core.Models;
 
-namespace LearningPlatform.Application.Services;
+namespace LearningPlatform.Core.Interfaces.Services;
 public interface ILessonsService
 {
     Task CreateLesson(Lesson lesson);

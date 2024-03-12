@@ -1,5 +1,6 @@
-﻿using LearningPlatform.Application.Interfaces.Repositories;
-using LearningPlatform.Core.Enums;
+﻿using LearningPlatform.Core.Enums;
+using LearningPlatform.Core.Interfaces.Repositories;
+using LearningPlatform.Core.Interfaces.Services;
 
 namespace LearninPlatform.Infrastructure.Authentication;
 

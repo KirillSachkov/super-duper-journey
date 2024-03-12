@@ -1,6 +1,6 @@
 ﻿using LearningPlatform.Core.Enums;
 
-namespace LearninPlatform.Infrastructure.Authentication;
+namespace LearningPlatform.Core.Interfaces.Services;
 
 public interface IPermissionService
 {

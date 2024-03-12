@@ -15,19 +15,19 @@ public static class CoursesEndpoints
         var endpoints = app.MapGroup("course");
 
         endpoints.MapPost(string.Empty, CreateCourse)
-            .RequirePermissions(Permission.Create);
+            .RequirePermissions(Permission.CreateCourse);
 
         endpoints.MapGet(string.Empty, GetCourses)
-            .RequirePermissions(Permission.Read);
+            .RequirePermissions(Permission.ReadCourse);
 
         endpoints.MapGet("{id:guid}", GetCourseById)
-            .RequirePermissions(Permission.Read);
+            .RequirePermissions(Permission.ReadCourse);
 
         endpoints.MapPut("{id:guid}", UpdateCourse)
-            .RequirePermissions(Permission.Update);
+            .RequirePermissions(Permission.UpdateCourse);
 
         endpoints.MapDelete("{id:guid}", DeleteCourse)
-            .RequirePermissions(Permission.Delete);
+            .RequirePermissions(Permission.DeleteCourse);
 
         return endpoints;
     }

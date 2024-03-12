@@ -1,11 +1,13 @@
 ﻿using LearningPlatform.Persistence.Configurations;
 using LearningPlatform.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace LearningPlatform.Persistence;
 
-public class LearningDbContext(DbContextOptions<LearningDbContext> options)
-    : DbContext(options)
+public class LearningDbContext(
+    DbContextOptions<LearningDbContext> options,
+    IOptions<AuthorizationOptions> authOptions) : DbContext(options)
 {
     public DbSet<CourseEntity> Courses { get; set; }
 
@@ -17,12 +19,8 @@ public class LearningDbContext(DbContextOptions<LearningDbContext> options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new CourseConfiguration());
-        modelBuilder.ApplyConfiguration(new LessonConfiguration());
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
-        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
-        modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(LearningDbContext).Assembly);
+
+        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(authOptions.Value));
     }
 }

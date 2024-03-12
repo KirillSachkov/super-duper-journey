@@ -1,5 +1,4 @@
-﻿
-namespace LearningPlatform.Application.Services;
+﻿namespace LearningPlatform.Core.Interfaces.Services;
 
 public interface IUserService
 {
